@@ -5,6 +5,8 @@ import com.rw.studentMs.model.Student;
 import com.rw.studentMs.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class StudentService {
+    private static final Logger log = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository studentRepository;
 
     public List<Student> getAllStudents() {

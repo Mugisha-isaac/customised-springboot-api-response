@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/student")
 @RequiredArgsConstructor
+@Validated
 public class StudentController {
 
     private final StudentService studentService;
@@ -26,10 +28,7 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     ApiResponse<List<Student>> getAllStudents(HttpServletRequest request) {
         List<Student> students = this.studentService.getAllStudents();
-//        if (students.isEmpty()) {
-//            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(students, HttpStatus.OK);
+
         return new ApiResponse<>(
                 200,
                 "Success",
@@ -43,11 +42,20 @@ public class StudentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Student> createStudent(
-            @RequestBody CreateStudentDto newStudentRequest
+    ApiResponse<Student> createStudent(
+            @RequestBody CreateStudentDto newStudentRequest, HttpServletRequest request
     ) throws BadRequestException {
         Student savedStudent = studentService.createNewStudent(newStudentRequest);
-        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+
+        return new ApiResponse<>(
+                201,
+                "Success",
+                null,
+                System.currentTimeMillis(),
+                "1.0.0",
+                request.getRequestURI(),
+                savedStudent
+        );
     }
 
     @PutMapping("/{studentId}")
