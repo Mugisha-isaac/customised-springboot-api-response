@@ -22,7 +22,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
+    private String login;
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -34,7 +34,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return login;
     }
     @Override
     public boolean isAccountNonExpired() {
