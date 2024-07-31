@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import java.io.InvalidClassException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
@@ -24,7 +26,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(InvalidClassException.class)
     public ResponseEntity<ApiResponse<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         ApiResponse<Object> response = new ApiResponse<>(
                 HttpStatus.BAD_REQUEST.value(),
