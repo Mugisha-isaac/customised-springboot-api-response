@@ -4,19 +4,19 @@ import com.rw.studentMs.dto.CreateStudentDto;
 import com.rw.studentMs.model.Student;
 import com.rw.studentMs.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StudentService {
-    private static final Logger log = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository studentRepository;
 
     public List<Student> getAllStudents() {
@@ -38,17 +38,17 @@ public class StudentService {
     }
 
     public Student updateStudent(UUID studentId, CreateStudentDto studentDto) throws BadRequestException {
-       Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> new BadRequestException("Student with id " + studentId + " does not exist "));
+        Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> new BadRequestException("Student with id " + studentId + " does not exist "));
 
         existingStudent.setDepartment(studentDto.getDepartment());
         existingStudent.setName(studentDto.getName());
         existingStudent.setEmail(studentDto.getEmail());
         existingStudent.setPhone(studentDto.getPhone());
 
-       return studentRepository.save(existingStudent);
+        return studentRepository.save(existingStudent);
     }
 
-    public Student deleteStudent(UUID studentId) throws BadRequestException{
+    public Student deleteStudent(UUID studentId) throws BadRequestException {
         Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> new BadRequestException("Student with id " + studentId + " does not exist "));
         studentRepository.deleteById(studentId);
 

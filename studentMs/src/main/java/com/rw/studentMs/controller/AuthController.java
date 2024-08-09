@@ -1,6 +1,5 @@
 package com.rw.studentMs.controller;
 
-import com.rw.studentMs.config.auth.TokenProvider;
 import com.rw.studentMs.dto.JwtDto;
 import com.rw.studentMs.dto.SignInDto;
 import com.rw.studentMs.dto.SignUpDto;
@@ -25,7 +24,7 @@ import javax.validation.Valid;
 public class AuthController {
     private AuthenticationManager authenticationManager;
     private AuthService authService;
-    private TokenProvider tokenProvider;
+//    private TokenProvider tokenProvider;
 
     @PostMapping("/signup")
     ApiResponse<UserDetails> signUp(@RequestBody @Valid SignUpDto data, HttpServletRequest request) {
@@ -37,7 +36,7 @@ public class AuthController {
     ApiResponse<JwtDto> signIn(@RequestBody @Valid SignInDto data, HttpServletRequest request) {
        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
        var authUser = authenticationManager.authenticate(usernamePassword);
-       var accessToken = tokenProvider.generateAccessToken((User) authUser.getPrincipal());
-        return new ApiResponse<>(200, "Success", null, System.currentTimeMillis(), "1.0.0", request.getRequestURI(), new JwtDto(accessToken));
+//       var accessToken = tokenProvider.generateAccessToken((User) authUser.getPrincipal());
+        return new ApiResponse<>(200, "Success", null, System.currentTimeMillis(), "1.0.0", request.getRequestURI(), null);
     }
 }
