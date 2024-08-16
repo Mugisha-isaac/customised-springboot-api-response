@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class ApiResponse<T> {
     private int statusCode;
     private String message;
-    private String error;
+    private List<FieldErrorDetail> errors;
     private long timestamp;
     private String version;
     private String path;

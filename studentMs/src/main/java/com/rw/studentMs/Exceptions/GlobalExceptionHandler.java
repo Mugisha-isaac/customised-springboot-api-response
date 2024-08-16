@@ -1,6 +1,7 @@
 package com.rw.studentMs.Exceptions;
 
 import com.rw.studentMs.utils.ApiResponse;
+import com.rw.studentMs.utils.FieldErrorDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,15 +10,24 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.io.InvalidClassException;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleGlobalException(Exception ex, WebRequest request) {
+        List<FieldErrorDetail> errorDetailList = new ArrayList<>();
+        errorDetailList.add(FieldErrorDetail.builder()
+                .field(ex.getClass().getSimpleName())
+                .message(ex.getMessage())
+                .rejectedValue(ex.getCause() != null ? ex.getCause().getMessage() : null)
+                .build()
+        );
         ApiResponse<Object> response = new ApiResponse<>(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Error",
-                ex.getMessage(),
+                errorDetailList,
                 System.currentTimeMillis(),
                 "1.0.0",
                 request.getDescription(false),
@@ -25,18 +35,5 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    @ExceptionHandler(InvalidClassException.class)
-    public ResponseEntity<ApiResponse<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
-        ApiResponse<Object> response = new ApiResponse<>(
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation Error",
-                ex.getBindingResult().getFieldError().getDefaultMessage(),
-                System.currentTimeMillis(),
-                "1.0.0",
-                request.getDescription(false),
-                null
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+    
 }

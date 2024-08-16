@@ -4,15 +4,21 @@ import com.rw.studentMs.dto.CreateStudentDto;
 import com.rw.studentMs.model.Student;
 import com.rw.studentMs.service.StudentService;
 import com.rw.studentMs.utils.ApiResponse;
+import com.rw.studentMs.utils.FieldErrorDetail;
+import com.rw.studentMs.validation.StudentValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -22,6 +28,7 @@ import java.util.UUID;
 public class StudentController {
 
     private final StudentService studentService;
+    private final StudentValidator studentValidator;
 
 
     @GetMapping
@@ -43,8 +50,31 @@ public class StudentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     ApiResponse<Student> createStudent(
-            @RequestBody CreateStudentDto newStudentRequest, HttpServletRequest request
+            @Valid @RequestBody CreateStudentDto newStudentRequest, HttpServletRequest request
     ) throws BadRequestException {
+
+        Errors errors = new BeanPropertyBindingResult(newStudentRequest, "newStudentRequest");
+        studentValidator.validate(newStudentRequest, errors);
+
+        if (errors.hasErrors()) {
+            List<FieldErrorDetail> errorDetails = errors.getFieldErrors().stream()
+                    .map(error -> FieldErrorDetail.builder()
+                            .field(error.getField())
+                            .rejectedValue(Objects.requireNonNull(error.getRejectedValue()).toString())
+                            .message(error.getDefaultMessage())
+                            .build())
+                    .toList();
+
+            return new ApiResponse<>(
+                    400,
+                    "Validation Failed",
+                    errorDetails,
+                    System.currentTimeMillis(),
+                    "1.0.0",
+                    request.getRequestURI(),
+                    null
+            );
+        }
         Student savedStudent = studentService.createNewStudent(newStudentRequest);
 
         return new ApiResponse<>(

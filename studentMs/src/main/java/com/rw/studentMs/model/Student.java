@@ -1,7 +1,6 @@
 package com.rw.studentMs.model;
 
 import com.rw.studentMs.enums.EStudentDepartment;
-import com.rw.studentMs.validation.CustomValidation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +20,6 @@ public class Student {
     @GeneratedValue(generator = "UUID")
     @Id
     private UUID id;
-    @CustomValidation(message = "Name should contain only alphabets")
     private String name;
     @NotNull(message = "Email cannot be null")
     private String email;

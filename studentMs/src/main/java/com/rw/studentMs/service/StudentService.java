@@ -24,6 +24,7 @@ public class StudentService {
     }
 
     public Student createNewStudent(CreateStudentDto studentDto) throws BadRequestException {
+        System.out.println("StudentDto: " + studentDto.toString());
         Student existingStudent = studentRepository.findStudentByEmail(studentDto.getEmail());
         if (existingStudent != null) {
             throw new BadRequestException("Student with email " + studentDto.getEmail() + " exists ");
