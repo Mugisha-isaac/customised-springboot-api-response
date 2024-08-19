@@ -20,7 +20,7 @@ public class StudentValidator implements Validator {
             errors.rejectValue("name", "student.name.empty", "Name cannot be empty");
         }
 
-        if(student.getName() != null && !student.getName().isEmpty() && student.getName().length() < 3) {
+        if (student.getName() != null && !student.getName().isEmpty() && student.getName().length() < 3) {
             errors.rejectValue("name", "student.name.length", "Name must be at least 3 characters long");
         }
 

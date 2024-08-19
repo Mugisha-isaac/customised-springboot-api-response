@@ -9,6 +9,7 @@ import com.rw.studentMs.validation.StudentValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -33,7 +35,7 @@ public class StudentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    ApiResponse<List<Student>> getAllStudents(HttpServletRequest request) {
+    public ApiResponse<List<Student>> getAllStudents(HttpServletRequest request) {
         List<Student> students = this.studentService.getAllStudents();
 
         return new ApiResponse<>(
@@ -49,7 +51,7 @@ public class StudentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ApiResponse<Student> createStudent(
+    public ApiResponse<Student> createStudent(
             @Valid @RequestBody CreateStudentDto newStudentRequest, HttpServletRequest request
     ) throws BadRequestException {
 
@@ -90,7 +92,7 @@ public class StudentController {
 
     @PutMapping("/{studentId}")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Student> updateStudent(
+    public ResponseEntity<Student> updateStudent(
             @PathVariable(name = "studentId") UUID studentId,
             @RequestBody CreateStudentDto updateStudentDto
     ) throws BadRequestException {
@@ -99,6 +101,37 @@ public class StudentController {
             return new ResponseEntity<>(updatedStudent, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{studentId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable(value = "students", key = "#id")
+    public ApiResponse<Student> getStudentById(
+            @PathVariable(name = "studentId") UUID studentId
+    ) {
+        Optional<Student> student = studentService.getStudentById(studentId);
+        return student.map(value -> new ApiResponse<>(
+                200,
+                "Success",
+                null,
+                System.currentTimeMillis(),
+                "1.0.0",
+                "/api/v1/student/" + studentId,
+                value
+        )).orElseGet(() -> new ApiResponse<>(
+                404,
+                "Not Found",
+                List.of(FieldErrorDetail.builder()
+                        .field("studentId")
+                        .rejectedValue(studentId.toString())
+                        .message("Student with id " + studentId + " does not exist")
+                        .build()),
+                System.currentTimeMillis(),
+                "1.0.0",
+                "/api/v1/student/" + studentId,
+                null
+        ));
+
     }
 
     @DeleteMapping("/{studentId}")

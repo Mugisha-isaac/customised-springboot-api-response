@@ -6,11 +6,10 @@ import com.rw.studentMs.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -47,6 +46,10 @@ public class StudentService {
         existingStudent.setPhone(studentDto.getPhone());
 
         return studentRepository.save(existingStudent);
+    }
+
+    public Optional<Student> getStudentById(UUID studentId)  {
+        return studentRepository.findById(studentId);
     }
 
     public Student deleteStudent(UUID studentId) throws BadRequestException {
