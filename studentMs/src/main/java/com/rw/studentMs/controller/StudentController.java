@@ -9,7 +9,9 @@ import com.rw.studentMs.validation.StudentValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -18,10 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/student")
@@ -31,16 +30,17 @@ public class StudentController {
 
     private final StudentService studentService;
     private final StudentValidator studentValidator;
+    private final MessageSource MessageSource;
 
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<Student>> getAllStudents(HttpServletRequest request) {
+    public ApiResponse<List<Student>> getAllStudents(HttpServletRequest request, Locale locale) {
         List<Student> students = this.studentService.getAllStudents();
 
         return new ApiResponse<>(
                 200,
-                "Success",
+                MessageSource.getMessage("success", null, locale),
                 null,
                 System.currentTimeMillis(),
                 "1.0.0",
