@@ -24,4 +24,5 @@ public class WebConfig implements WebMvcConfigurer {
     public StudentValidator studentValidator() {
         return new StudentValidator();
     }
+
 }
