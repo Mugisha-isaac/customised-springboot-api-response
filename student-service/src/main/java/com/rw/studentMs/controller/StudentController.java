@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/student")
+@RequestMapping("/api/v1/students")
 @RequiredArgsConstructor
 @Validated
 public class StudentController {
