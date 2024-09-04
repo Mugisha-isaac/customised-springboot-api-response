@@ -25,6 +25,7 @@ public class SecurityConfig {
             "/studentMs/swagger-ui/**",
             "/studentMs/v3/api-docs/**",
             "/api/v1/students/**",
+            "http://localhost:8083/api/v1/classes/**",
     };
 
     @Bean
@@ -33,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/students/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/students/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/classes/**").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )

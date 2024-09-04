@@ -1,20 +1,19 @@
-package org.rw.config;
+package com.rw.studentMs.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.exception.BadRequestException;
 import com.github.dockerjava.api.exception.InternalServerErrorException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.exception.UnauthorizedException;
+import com.rw.studentMs.utils.ApiResponse;
 import com.squareup.okhttp.OkHttpClient;
+import feign.Logger;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.rw.utils.ApiResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import feign.Logger;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Configuration
@@ -52,9 +51,8 @@ public class FeignConfig {
             String message;
             try {
                 message = new ObjectMapper().readValue(response.body().asInputStream().readAllBytes(), ApiResponse.class).getMessage();
-                System.out.println("Message............" + message);
             } catch (Exception e) {
-                throw new InternalServerErrorException(e.getMessage());
+                throw new InternalServerErrorException("internal server error");
             }
 
             return switch (response.status()) {

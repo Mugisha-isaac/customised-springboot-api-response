@@ -9,6 +9,7 @@ import org.rw.utils.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/classes")
@@ -45,6 +46,22 @@ public class ClassController {
             "1.0.0",
             request.getRequestURI(),
             newClass
+        );
+    }
+
+    @PostMapping("/enroll/{classId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<Object> enrollStudent(@PathVariable("classId") UUID classId, @RequestParam(name = "studentId") UUID studentId, HttpServletRequest request) {
+        this.classService.enrollStudent(classId, studentId);
+
+        return new ApiResponse<>(
+            201,
+            "success",
+            null,
+            System.currentTimeMillis(),
+            "1.0.0",
+            request.getRequestURI(),
+            null
         );
     }
 }
