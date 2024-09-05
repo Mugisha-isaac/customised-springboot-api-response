@@ -10,14 +10,20 @@
         <module name="api-gateway" />
         <module name="class-service" />
         <module name="student-service" />
+        <module name="discovery-server" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="untitled" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="class-service" options="-parameters" />
+      <module name="discovery-server" options="-parameters" />
       <module name="student-service" options="-parameters" />
+      <module name="untitled" options="-parameters" />
     </option>
   </component>
 </project>

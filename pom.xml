@@ -18,6 +18,7 @@
         <module>class-service</module>
         <module>student-service</module>
         <module>api-gateway</module>
+        <module>discovery-server</module>
     </modules>
 
     <properties>
