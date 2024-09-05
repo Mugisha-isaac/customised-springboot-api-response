@@ -40,6 +40,13 @@ services:
       - "6379:6379"
     restart: always
 
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    restart: always
+
   postgres-keycloak:
     container_name: postgres-keycloak
     image: postgres
